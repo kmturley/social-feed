@@ -4,7 +4,7 @@
  */
 
 .socialfeed {
-    height: 400px;
+    height: 600px;
     overflow-y: scroll;
     list-style: none;
     padding: 10px 10px 0 10px;
@@ -43,17 +43,23 @@
 }
 
 .socialfeed .post h2 {
-    margin: 0;
+    margin: 0 0 5px 0;
     font-size: 1em;
     font-weight: normal;
 }
 
 .socialfeed .post .time {
-    font-size: 0.8em;
     margin: 0 0 0 7px;
+    font-size: 0.8em;
 }
 
 .socialfeed .post p {
     margin: 0 0 5px 0;
     line-height: 1.4em;
+}
+
+.socialfeed .post .instagram {
+    margin: 5px 0 0 0;
+    display: block;
+    max-width: 100%;
 }
