@@ -17,8 +17,10 @@ var SocialFeed = function () {
             // google plus
             this.load(options.google, function (data) {
                 data = JSON.parse(data);
-                me.add(data.items);
-                me.render(me.items);
+                if (data.items) {
+                    me.add(data.items);
+                    me.render(me.items);
+                }
             });
             
             // twitter
@@ -32,45 +34,47 @@ var SocialFeed = function () {
                     dates = [],
                     titles = [];
 
-                el.innerHTML = data.body;
-                
-                users = el.querySelectorAll('.p-name');
-                profiles = el.querySelectorAll('.u-url');
-                images = el.querySelectorAll('.u-photo');
-                dates = el.querySelectorAll('.dt-updated');
-                titles = el.querySelectorAll('.e-entry-title');
-                
-                for (i = 0; i < users.length; i += 1) {
-                    items.push({
-                        type: 'twitter',
-                        actor: { displayName: users[i].innerHTML, image: { url: images[i].getAttribute('src') }, url: profiles[i].getAttribute('href') },
-                        object: { content: titles[i].innerHTML },
-                        published: dates[i].getAttribute('datetime'),
-                        title: titles[i].innerHTML,
-                        url: ''
-                    });
+                if (data.body) {
+                    el.innerHTML = data.body;
+                    users = el.querySelectorAll('.p-name');
+                    profiles = el.querySelectorAll('.u-url');
+                    images = el.querySelectorAll('.u-photo');
+                    dates = el.querySelectorAll('.dt-updated');
+                    titles = el.querySelectorAll('.e-entry-title');
+                    for (i = 0; i < users.length; i += 1) {
+                        items.push({
+                            type: 'twitter',
+                            actor: { displayName: users[i].innerHTML, image: { url: images[i].getAttribute('src') }, url: profiles[i].getAttribute('href') },
+                            object: { content: titles[i].innerHTML },
+                            published: dates[i].getAttribute('datetime'),
+                            title: titles[i].innerHTML,
+                            url: ''
+                        });
+                    }
+                    me.add(items);
+                    me.render(me.items);
                 }
-                me.add(items);
-                me.render(me.items);
             });
             
             // facebook
             this.loadJSONP(options.facebook, function (data) {
                 var i = 0,
                     items = [];
-                
-                for (i = 0; i < data.data.length; i += 1) {
-                    items.push({
-                        type: 'facebook',
-                        actor: { displayName: data.data[i].from.name, image: { url: '' }, url: '' },
-                        object: { content: data.data[i].message },
-                        published: data.data[i].updated_time,
-                        title: data.data[i].message,
-                        url: ''
-                    });
+
+                if (data.data) {
+                    for (i = 0; i < data.data.length; i += 1) {
+                        items.push({
+                            type: 'facebook',
+                            actor: { displayName: data.data[i].from.name, image: { url: '' }, url: '' },
+                            object: { content: data.data[i].message },
+                            published: data.data[i].updated_time,
+                            title: data.data[i].message,
+                            url: ''
+                        });
+                    }
+                    me.add(items);
+                    me.render(me.items);
                 }
-                me.add(items);
-                me.render(me.items);
             });
         },
         load: function (url, callback) {
