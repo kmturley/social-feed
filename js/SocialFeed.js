@@ -14,68 +14,94 @@ var SocialFeed = function () {
             var me = this;
             this.el = document.getElementById(options.id);
             
-            // google plus
-            this.load(options.google, function (data) {
-                data = JSON.parse(data);
-                if (data.items) {
-                    me.add(data.items);
-                    me.render(me.items);
-                }
-            });
-            
-            // twitter
-            this.loadJSONP(options.twitter, function (data) {
-                var i = 0,
-                    el = document.createElement('div'),
-                    items = [],
-                    users = [],
-                    profiles = [],
-                    images = [],
-                    dates = [],
-                    titles = [];
-
-                if (data.body) {
-                    el.innerHTML = data.body;
-                    users = el.querySelectorAll('.p-name');
-                    profiles = el.querySelectorAll('.u-url');
-                    images = el.querySelectorAll('.u-photo');
-                    dates = el.querySelectorAll('.dt-updated');
-                    titles = el.querySelectorAll('.e-entry-title');
-                    for (i = 0; i < users.length; i += 1) {
-                        items.push({
-                            type: 'twitter',
-                            actor: { displayName: users[i].innerHTML, image: { url: images[i].getAttribute('src') }, url: profiles[i].getAttribute('href') },
-                            object: { content: titles[i].innerHTML },
-                            published: dates[i].getAttribute('datetime'),
-                            title: titles[i].innerHTML,
-                            url: ''
-                        });
+            if (options.google) {
+                this.load(options.google, function (data) {
+                    data = JSON.parse(data);
+                    if (data.items) {
+                        me.add(data.items);
+                        me.render(me.items);
                     }
-                    me.add(items);
-                    me.render(me.items);
-                }
-            });
+                });
+            }
             
-            // facebook
-            this.loadJSONP(options.facebook, function (data) {
-                var i = 0,
-                    items = [];
+            if (options.twitter) {
+                this.loadJSONP(options.twitter, function (data) {
+                    var i = 0,
+                        el = document.createElement('div'),
+                        items = [],
+                        users = [],
+                        profiles = [],
+                        images = [],
+                        dates = [],
+                        titles = [];
 
-                if (data.data) {
-                    for (i = 0; i < data.data.length; i += 1) {
-                        items.push({
-                            type: 'facebook',
-                            actor: { displayName: data.data[i].from.name, image: { url: '' }, url: '' },
-                            object: { content: data.data[i].message },
-                            published: data.data[i].updated_time,
-                            title: data.data[i].message,
-                            url: ''
-                        });
+                    if (data.body) {
+                        el.innerHTML = data.body;
+                        users = el.querySelectorAll('.p-name');
+                        profiles = el.querySelectorAll('.u-url');
+                        images = el.querySelectorAll('.u-photo');
+                        dates = el.querySelectorAll('.dt-updated');
+                        titles = el.querySelectorAll('.e-entry-title');
+                        for (i = 0; i < users.length; i += 1) {
+                            items.push({
+                                type: 'twitter',
+                                actor: { displayName: users[i].innerHTML, image: { url: images[i].getAttribute('src') }, url: profiles[i].getAttribute('href') },
+                                object: { content: titles[i].innerHTML },
+                                published: dates[i].getAttribute('datetime'),
+                                title: titles[i].innerHTML,
+                                url: ''
+                            });
+                        }
+                        me.add(items);
+                        me.render(me.items);
                     }
-                    me.add(items);
-                    me.render(me.items);
-                }
-            });
+                });
+            }
+            
+            if (options.facebook) {
+                this.loadJSONP(options.facebook, function (data) {
+                    var i = 0,
+                        items = [];
+
+                    if (data.data) {
+                        for (i = 0; i < data.data.length; i += 1) {
+                            items.push({
+                                type: 'facebook',
+                                actor: { displayName: data.data[i].from.name, image: { url: '' }, url: '' },
+                                object: { content: data.data[i].message },
+                                published: data.data[i].updated_time,
+                                title: data.data[i].message,
+                                url: ''
+                            });
+                        }
+                        me.add(items);
+                        me.render(me.items);
+                    }
+                });
+            }
+            
+            if (options.instagram) {
+                this.loadJSONP(options.instagram, function (data) {
+                    var i = 0,
+                        items = [];
+                    console.log(data);
+
+                    if (data.data) {
+                        for (i = 0; i < data.data.length; i += 1) {
+                            items.push({
+                                type: 'instagram',
+                                actor: { displayName: data.data[i].user.username, image: { url: data.data[i].user.profile_picture }, url: data.data[i].link },
+                                object: { content: data.data[i].caption.text + '<img src="' + data.data[i].images.low_resolution.url + '" alt=""  class="instagram" />' },
+                                published: new Date(Number(data.data[i].created_time) * 1000).toUTCString(),
+                                title: data.data[i].caption.text,
+                                url: ''
+                            });
+                        }
+                        me.add(items);
+                        me.render(me.items);
+                    }
+                });
+            }
         },
         load: function (url, callback) {
             var xhr = new window.XMLHttpRequest();
