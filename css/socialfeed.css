@@ -1,0 +1,59 @@
+/**
+ * Social Feed
+ * by kmturley
+ */
+
+.socialfeed {
+    height: 400px;
+    overflow-y: scroll;
+    list-style: none;
+    padding: 10px 10px 0 10px;
+    background-color: #efefef;
+}
+
+.socialfeed .post {
+    clear: both;
+    padding: 10px;
+    margin: 0 0 10px 0;
+    font-size: 1em;
+    color: #333;
+    background-color: #fff;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.socialfeed .post .image {
+    width: 50px;
+    float: left;
+    margin: 0 10px 0 0;
+}
+
+.socialfeed .post a {
+    color: #2a71d1;
+}
+
+.socialfeed .post .icon {
+    float: right;
+    width: 20px;
+    margin: 0 0 0 10px;
+}
+
+.socialfeed .post .content {
+    overflow: hidden;
+}
+
+.socialfeed .post h2 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.socialfeed .post .time {
+    font-size: 0.8em;
+    margin: 0 0 0 7px;
+}
+
+.socialfeed .post p {
+    margin: 0 0 5px 0;
+    line-height: 1.4em;
+}
